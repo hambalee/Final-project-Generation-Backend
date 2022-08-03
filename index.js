@@ -1,7 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import authRoute from "./routes/auth.js";
+import activityRoute from "./routes/activity.js";
 import dotenv from "dotenv";
+import cors from "cors";
 
 const app = express();
 dotenv.config();
@@ -24,7 +26,11 @@ mongoose.connection.on("connected", () => {
 });
 
 // Middleware
+app.use(cors());
+app.use(express.json());
 app.use("/auth", authRoute);
+
+app.use("/activity", activityRoute);
 
 app.listen(8000, () => {
   connect();
