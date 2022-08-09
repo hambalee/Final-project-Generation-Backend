@@ -4,12 +4,16 @@ import {
   deleteActivity,
   getActivity,
   updateActivity,
+  sortActivityByType,
+  paginationActivity,
 } from "../controllers/activity.js";
 
 const router = express.Router();
 
 //Get all activities
-router.get("/", getActivity);
+router.get("/", paginationActivity, getActivity);
+//Get by typeo
+router.get("/typesort", sortActivityByType);
 //Create activity
 router.post("/", createActivity);
 //Patch activity

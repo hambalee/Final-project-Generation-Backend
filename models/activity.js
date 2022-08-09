@@ -22,9 +22,21 @@ const ActivitySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  userId: {
+    type: String,
+    required: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
   },
 });
 
