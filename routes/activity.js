@@ -2,16 +2,18 @@ import express from "express";
 import {
   createActivity,
   deleteActivity,
-  getActivity,
+  getActivities,
   updateActivity,
   sortActivityByType,
-  paginationActivity,
+  getActivityById,
 } from "../controllers/activity.js";
 
 const router = express.Router();
 
 //Get all activities
-router.get("/", paginationActivity, getActivity);
+router.get("/", getActivities);
+//Get by id activity
+router.get("/:id", getActivityById);
 //Get by typeo
 router.get("/typesort", sortActivityByType);
 //Create activity
