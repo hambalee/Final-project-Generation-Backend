@@ -1,10 +1,28 @@
 import Activity from "../models/activity.js";
 
-export const getActivity = async (req, res, next) => {
+export const getActivities = async (req, res, next) => {
+  const { page, limit } = req.query;
+
+  var perPage = parseInt(limit) || 10;
+  var pageNum = Math.max(0, parseInt(page));
   try {
-    const activities = await Activity.find();
-    console.log("Get All Activity", activities);
-    res.status(200).json(activities);
+    // const activities = await Activity.find();
+    const paginationActivity = await Activity.find({})
+      .skip(perPage * (pageNum - 1))
+      .limit(perPage);
+    console.log("Get All Activity", paginationActivity);
+    res.status(200).json(paginationActivity);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getActivityById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const activity = await Activity.findById(id);
+    console.log("Get Activity", activity);
+    res.status(200).json(activity);
   } catch (error) {
     next(error);
   }
