@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 8,
-    maxLength: 32,
+    maxLength: 128,
   },
   email: {
     type: String,
@@ -27,10 +27,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+}, { timestamps: true });
 
 export default mongoose.model("User", UserSchema);
