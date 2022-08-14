@@ -28,8 +28,9 @@ const ActivitySchema = new mongoose.Schema({
     required: false,
   },
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: false,
+    ref: "User",
   },
   createdAt: {
     type: Date,

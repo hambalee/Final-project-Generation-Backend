@@ -3,26 +3,18 @@ import Activity from "../models/activity.js";
 export const getActivities = async (req, res, next) => {
   const { page, limit } = req.query;
 
-  var perPage = parseInt(limit) || 10;
-  var pageNum = Math.max(0, parseInt(page));
+  let perPage = parseInt(limit) || 10;
+  let pageNum = Math.max(0, parseInt(page));
   try {
     // const activities = await Activity.find();
     const paginationActivity = await Activity.find({})
       .skip(perPage * (pageNum - 1))
-      .limit(perPage);
+      .limit(perPage)
+      .sort({
+        createdAt: -1,
+      });
     console.log("Get All Activity", paginationActivity);
     res.status(200).json(paginationActivity);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getActivityById = async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const activity = await Activity.findById(id);
-    console.log("Get Activity", activity);
-    res.status(200).json(activity);
   } catch (error) {
     next(error);
   }
@@ -70,26 +62,37 @@ export const sortActivityByType = async (req, res, next) => {
     const sortActivity = await Activity.find({ type: req.query.type }).sort({
       createdAt: -1,
     });
-    console.log(sortActivity);
+    console.log("sortActivityByType", sortActivity);
     res.status(200).json(sortActivity);
   } catch (error) {
     next(error);
   }
 };
 
-export const paginationActivity = async (req, res, next) => {
-  const { page, limit } = req.query;
-
-  var perPage = parseInt(limit) || 10;
-  var pageNum = Math.max(0, parseInt(page));
-
+export const getActivityById = async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const paginationActivity = await Activity.find({})
-      .skip(perPage * (pageNum - 1))
-      .limit(perPage);
-    console.log("paginationActivity", paginationActivity);
-    res.status(200).json(paginationActivity);
+    const activity = await Activity.findById(id);
+    console.log("Get Activity", activity);
+    res.status(200).json(activity);
   } catch (error) {
     next(error);
   }
 };
+
+// export const paginationActivity = async (req, res, next) => {
+//   const { page, limit } = req.query;
+
+//   var perPage = parseInt(limit) || 10;
+//   var pageNum = Math.max(0, parseInt(page));
+
+//   try {
+//     const paginationActivity = await Activity.find({})
+//       .skip(perPage * (pageNum - 1))
+//       .limit(perPage);
+//     console.log("paginationActivity", paginationActivity);
+//     res.status(200).json(paginationActivity);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
