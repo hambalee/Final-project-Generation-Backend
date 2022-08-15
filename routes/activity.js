@@ -12,10 +12,10 @@ const router = express.Router();
 
 //Get all activities
 router.get("/", getActivities);
-//Get by id activity
-router.get("/:id", getActivityById);
 //Get by typeo
 router.get("/typesort", sortActivityByType);
+//Get by id activity
+router.get("/:id", getActivityById);
 //Create activity
 router.post("/", createActivity);
 //Patch activity
