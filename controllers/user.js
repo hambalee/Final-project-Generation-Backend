@@ -1,5 +1,5 @@
 import User from "../models/user.js";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
 export const getUser = async (req, res, next) => {
   try {
@@ -14,13 +14,12 @@ export const getUser = async (req, res, next) => {
 export const createUser = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
-		const hashPassword = await bcrypt.hash(req.body.password, salt);
-    const newUser = await User({...req.body, password: hashPassword});
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const newUser = await User({ ...req.body, password: hashPassword });
     const saveUser = await newUser.save();
-    // console.log(saveUser);
-    res.status(201).json(saveUser);
+    res.status(201).json({ message: "User created successfully", saveUser });
   } catch (error) {
-		res.status(500).send({ message: "Internal Server Error", error });
+    res.status(500).send({ message: "Internal Server Error", error });
     next(error);
   }
 };
@@ -28,11 +27,14 @@ export const createUser = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
-		const hashPassword = await bcrypt.hash(req.body.password, salt);
-    // TODO: validate before save
-    const updateUser = await User.findByIdAndUpdate(req.params.id, {...req.body, password: hashPassword}, {
-      new: true,
-    });
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const updateUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, password: hashPassword },
+      {
+        new: true,
+      }
+    );
     console.log("updateUser", updateUser);
     res.status(200).json(updateUser);
   } catch (error) {

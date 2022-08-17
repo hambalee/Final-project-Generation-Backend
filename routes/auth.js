@@ -1,9 +1,31 @@
 import express from "express";
+import User from "../models/user.js";
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
   res.json("Hello World");
+});
+
+router.post("/", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(401).send({ message: "Invalid Email or Password" });
+    }
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) {
+      return res.status(401).send({ message: "Invalid Email or Password" });
+    }
+    const token = user.generateAuthToken();
+		res.status(200).send({ data: token, message: "Logged in successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Internal Server Error" });
+  }
 });
 
 export default router;
