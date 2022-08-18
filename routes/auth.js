@@ -10,6 +10,12 @@ router.get("/", (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
+    // Validate user input
+    if (!(req.body.email && req.body.password)) {
+      res.status(400).send("All input is required");
+    }
+
+    // Validate if user exist in our database
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res.status(401).send({ message: "Invalid Email or Password" });
@@ -21,10 +27,14 @@ router.post("/", async (req, res) => {
     if (!validPassword) {
       return res.status(401).send({ message: "Invalid Email or Password" });
     }
+
+    // Create token
     const token = user.generateAuthToken();
-		res.status(200).send({ data: token, message: "Logged in successfully" });
+    res
+      .status(200)
+      .send({ token, message: "Logged in successfully", user_id: user._id });
   } catch (error) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "Internal Server Error", error });
   }
 });
 

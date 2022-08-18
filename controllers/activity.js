@@ -7,7 +7,17 @@ export const getActivities = async (req, res, next) => {
   let pageNum = Math.max(0, parseInt(page));
   try {
     // const activities = await Activity.find();
-    const paginationActivity = await Activity.find({})
+
+    // Get all activities
+    const dbQuery = {}
+
+    // Get all activities without owner
+    // const dbQuery = {owner: null}
+
+    // Get all activities with owner
+    // const dbQuery = { owner: req.body.owner}
+
+    const paginationActivity = await Activity.find(dbQuery)
       .skip(perPage * (pageNum - 1))
       .limit(perPage)
       .sort({
