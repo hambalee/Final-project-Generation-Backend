@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import bcrypt from "bcryptjs";
 
 export const getUser = async (req, res, next) => {
   try {
@@ -11,23 +12,29 @@ export const getUser = async (req, res, next) => {
 };
 
 export const createUser = async (req, res, next) => {
-  const newUser = await User(req.body);
-  console.log("create new user", newUser);
-
   try {
+    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const newUser = await User({ ...req.body, password: hashPassword });
     const saveUser = await newUser.save();
-    // console.log(saveUser);
-    res.status(201).json(saveUser);
+    res.status(201).json({ message: "User created successfully", saveUser });
   } catch (error) {
+    res.status(500).send({ message: "Internal Server Error", error });
     next(error);
   }
 };
 
 export const updateUser = async (req, res, next) => {
   try {
-    const updateUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const updateUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, password: hashPassword },
+      {
+        new: true,
+      }
+    );
     console.log("updateUser", updateUser);
     res.status(200).json(updateUser);
   } catch (error) {

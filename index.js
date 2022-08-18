@@ -34,7 +34,8 @@ app.use("/auth", authRoute);
 app.use("/activity", activityRoute);
 app.use("/users", userRoute);
 
-app.listen(8000, () => {
+const port = process.env.PORT || 8000
+app.listen(port, () => {
   connect();
-  console.log("Server is running on port 8000");
+  console.log("Server is running on port", port);
 });
