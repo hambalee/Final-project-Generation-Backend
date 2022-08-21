@@ -2,28 +2,41 @@ import Activity from "../models/activity.js";
 
 export const getActivities = async (req, res, next) => {
   const { page, limit } = req.query;
+  const { type } = req.query;
 
   let perPage = parseInt(limit);
   let pageNum = Math.max(0, parseInt(page));
+  let paginationActivity;
+  let sortActivities;
   try {
-    // const activities = await Activity.find();
-    const paginationActivity = await Activity.find({})
-      .skip(perPage * (pageNum - 1))
-      .limit(perPage)
-      .sort({
-        createdAt: -1,
-      })
-      .exec((err, activities) => {
-        Activity.count().exec((err, count) => {
-          res.status(200).json({
-            activities: activities,
-            pageNum: pageNum,
-            totalActivities: count,
-            pageSize: perPage,
+    if (type === undefined) {
+      console.log("type ไม่มีค่า");
+      // const activities = await Activity.find();
+      paginationActivity = await Activity.find({})
+        .skip(perPage * (pageNum - 1))
+        .limit(perPage)
+        .sort({
+          createdAt: -1,
+        })
+        .exec((err, activities) => {
+          Activity.count().exec((err, count) => {
+            res.status(200).json({
+              activities: activities,
+              pageNum: pageNum,
+              totalActivities: count,
+              pageSize: perPage,
+            });
           });
         });
+    } else {
+      console.log("type มีค่าเป็น ", type);
+      sortActivities = await Activity.find({ type: type }).sort({
+        createdAt: -1,
       });
-    console.log("Get All Activity", paginationActivity);
+      res.status(200).json(sortActivities);
+    }
+    console.log("Get paginationActivity", paginationActivity);
+    console.log("Get sortActivities", sortActivities);
   } catch (error) {
     next(error);
   }
@@ -66,18 +79,6 @@ export const deleteActivity = async (req, res, next) => {
   }
 };
 
-export const sortActivityByType = async (req, res, next) => {
-  try {
-    const sortActivity = await Activity.find({ type: req.query.type }).sort({
-      createdAt: -1,
-    });
-    console.log("sortActivityByType", sortActivity);
-    res.status(200).json(sortActivity);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const getActivityById = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -88,20 +89,3 @@ export const getActivityById = async (req, res, next) => {
     next(error);
   }
 };
-
-// export const paginationActivity = async (req, res, next) => {
-//   const { page, limit } = req.query;
-
-//   var perPage = parseInt(limit) || 10;
-//   var pageNum = Math.max(0, parseInt(page));
-
-//   try {
-//     const paginationActivity = await Activity.find({})
-//       .skip(perPage * (pageNum - 1))
-//       .limit(perPage);
-//     console.log("paginationActivity", paginationActivity);
-//     res.status(200).json(paginationActivity);
-//   } catch (error) {
-//     next(error);
-//   }
-// };

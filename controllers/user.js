@@ -51,3 +51,19 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateProfileImg = async (req, res, next) => {
+  try {
+    const updateProfileImg = await User.findByIdAndUpdate(
+      req.params.id,
+      { profileImg: req.body.profileImg },
+      {
+        new: true,
+      }
+    );
+    console.log("updateProfileImg", updateProfileImg);
+    res.status(200).json(updateProfileImg);
+  } catch (error) {
+    next(error);
+  }
+};
