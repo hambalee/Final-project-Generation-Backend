@@ -12,7 +12,7 @@ dotenv.config();
 
 if (config.isVercel) {
   app.use(async (req, res, next) => {
-    await mongoose.connect(config.mongo, config.mongodb);
+    await mongoose.connect(config.mongo);
     return next();
   });
 }
