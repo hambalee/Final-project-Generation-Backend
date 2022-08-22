@@ -5,6 +5,7 @@ import activityRoute from "./routes/activity.js";
 import userRoute from "./routes/user.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import auth from './middleware/auth.js'
 
 const app = express();
 dotenv.config();
@@ -33,7 +34,12 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use("/auth", authRoute);
 
-app.use("/activity", activityRoute);
+// Test Middleware
+// app.post('/welcome', auth, (req, res) => {
+//   res.status(200).send('Welcome 🙏');
+// })
+
+app.use("/activity", auth, activityRoute);
 app.use("/users", userRoute);
 
 const port = process.env.PORT || 8000;

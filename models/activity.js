@@ -39,6 +39,9 @@ const ActivitySchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+  owner: {
+    type: String,
+  },
 });
 
 export default mongoose.model("Activity", ActivitySchema);
