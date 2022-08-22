@@ -3,7 +3,7 @@ import Activity from "../models/activity.js";
 export const getActivities = async (req, res, next) => {
   const { page, limit } = req.query;
 
-  let perPage = parseInt(limit) || 10;
+  let perPage = parseInt(limit);
   let pageNum = Math.max(0, parseInt(page));
   try {
     // const activities = await Activity.find();
@@ -22,9 +22,18 @@ export const getActivities = async (req, res, next) => {
       .limit(perPage)
       .sort({
         createdAt: -1,
+      })
+      .exec((err, activities) => {
+        Activity.count().exec((err, count) => {
+          res.status(200).json({
+            activities: activities,
+            pageNum: pageNum,
+            totalActivities: count,
+            pageSize: perPage,
+          });
+        });
       });
     console.log("Get All Activity", paginationActivity);
-    res.status(200).json(paginationActivity);
   } catch (error) {
     next(error);
   }
