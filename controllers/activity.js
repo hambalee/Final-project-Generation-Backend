@@ -40,7 +40,7 @@ export const getActivities = async (req, res, next) => {
         });
     } else {
       console.log("type มีค่าเป็น ", type);
-      sortActivities = await Activity.find({ type: type }).sort({
+      sortActivities = await Activity.find({ type: type, owner: req.body.owner }).sort({
         createdAt: -1,
       });
       res.status(200).json(sortActivities);
