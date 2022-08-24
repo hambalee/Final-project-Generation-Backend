@@ -16,10 +16,12 @@ export const createUser = async (req, res, next) => {
   try {
     // Check if user already exist
     // Validate if user exist in our database
+    // const email = req.body
+    // console.log("req.body.email user controller : ", email);
     const oldUser = await User.findOne({ email: req.body.email});
 
     if (oldUser) {
-      return res.status(409).send("User already exist. Please login");
+      return res.status(409).send({ message: "User already exist. Please login" });
     }
 
     // Create user in our database
