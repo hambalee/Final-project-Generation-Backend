@@ -29,7 +29,7 @@ export const getActivities = async (req, res, next) => {
           createdAt: -1,
         })
         .exec((err, activities) => {
-          Activity.count().exec((err, count) => {
+          Activity.find(dbQuery).count().exec((err, count) => {
             res.status(200).json({
               activities: activities,
               pageNum: pageNum,
